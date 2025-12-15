@@ -84,10 +84,6 @@ function LoginInner() {
                 <button className="btnPrimary btnMag" disabled={loading}>
                   {loading ? "Ingresando..." : "Ingresar"}
                 </button>
-
-                <div className="hint">
-                  Si es tu primera vez, usa el usuario admin inicial definido en el backend.
-                </div>
               </form>
             </div>
           </section>
