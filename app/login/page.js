@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../lib/auth";
 
-export default function LoginPage() {
+function LoginInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login, error, setError } = useAuth();
@@ -15,74 +15,112 @@ export default function LoginPage() {
 
   async function onSubmit(e) {
     e.preventDefault();
-    setError(null);
+    setError?.(null);
     setLoading(true);
+
     try {
       await login(username, password);
+
       const next = (searchParams.get("next") || "/report").toString();
       const allowed = new Set(["/report", "/admin"]);
       const target = allowed.has(next) ? next : "/report";
+
       router.replace(target);
     } catch (e) {
-      setError(e.message || "Error");
+      setError?.(e?.message || "Error");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <>
-      <div className="topbar" />
-      <main className="loginShell">
-        <section className="card loginCard">
-          <div className="cardBody">
-            <img src="/magdalena-logo.png" alt="Magdalena" style={{ height: 34, width: "auto" }} />
-            <h1 className="h1" style={{ marginTop: 14 }}>
-              Ingreso al portal
-            </h1>
-            <p className="p">
-              Ingresa con tu usuario y contraseña para ver el reporte.
-            </p>
+      <>
+        <div className="topbar" />
+        <main className="loginShell">
+          <section className="card loginCard">
+            <div className="cardBody">
+              <img
+                  src="/magdalena-logo.png"
+                  alt="Magdalena"
+                  style={{ height: 38, width: "auto" }}
+              />
 
-            <form onSubmit={onSubmit} style={{ marginTop: 18, display: "grid", gap: 12 }}>
-              <div>
-                <label className="label">Usuario</label>
-                <input
-                  className="input"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="correo@empresa.com"
-                  autoComplete="username"
-                  required
-                />
-              </div>
+              <h1 className="h1" style={{ marginTop: 14 }}>
+                Ingreso al portal
+              </h1>
 
-              <div>
-                <label className="label">Contraseña</label>
-                <input
-                  className="input"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                  required
-                />
-              </div>
-
-              {error && <div className="alert">{String(error)}</div>}
-
-              <button className="btn btnPrimary" type="submit" disabled={loading}>
-                {loading ? "Ingresando..." : "Ingresar"}
-              </button>
-
-              <p className="p" style={{ fontSize: 13 }}>
-                Si no tienes acceso, solicita a un administrador que cree tu usuario.
+              <p className="p">
+                Ingresa con tu usuario y contraseña para ver el reporte.
               </p>
-            </form>
-          </div>
-        </section>
-      </main>
-    </>
+
+              <form className="form" onSubmit={onSubmit}>
+                <label className="label">
+                  Usuario
+                  <input
+                      className="input"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder="correo@dominio.com"
+                      autoComplete="username"
+                      required
+                  />
+                </label>
+
+                <label className="label">
+                  Contraseña
+                  <input
+                      className="input"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      autoComplete="current-password"
+                      required
+                  />
+                </label>
+
+                {error ? <div className="error">{String(error)}</div> : null}
+
+                <button className="btnPrimary" disabled={loading}>
+                  {loading ? "Ingresando..." : "Ingresar"}
+                </button>
+
+                <div className="hint">
+                  Si es tu primera vez, usa el usuario admin inicial definido en el backend.
+                </div>
+              </form>
+            </div>
+          </section>
+        </main>
+      </>
+  );
+}
+
+export default function LoginPage() {
+  // ✅ Esto arregla el build/prerender en Vercel
+  return (
+      <Suspense
+          fallback={
+            <>
+              <div className="topbar" />
+              <main className="loginShell">
+                <section className="card loginCard">
+                  <div className="cardBody">
+                    <img
+                        src="/magdalena-logo.png"
+                        alt="Magdalena"
+                        style={{ height: 38, width: "auto" }}
+                    />
+                    <h1 className="h1" style={{ marginTop: 14 }}>
+                      Cargando…
+                    </h1>
+                  </div>
+                </section>
+              </main>
+            </>
+          }
+      >
+        <LoginInner />
+      </Suspense>
   );
 }
