@@ -86,13 +86,19 @@ export default function UserAdmin() {
   async function createUser() {
     setCreateBusy(true);
     setError(null);
+
     try {
+      const pass = createPassword.trim();
+
+      // ✅ Si el usuario escribe contraseña, usamos esa.
+      // ✅ Si está vacía y "generar" está activo, el backend genera.
       const body = {
         username: createUsername,
-        generatePassword: createGenerate,
-        ...(createGenerate ? {} : { password: createPassword }),
         role: createIsAdmin ? "admin" : "viewer",
+        ...(pass ? { password: pass } : {}),
+        generatePassword: Boolean(createGenerate && !pass),
       };
+
       const res = await apiFetch("/api/users", { method: "POST", body, token });
       setCreatedPassword(res.generatedPassword || null);
       setCreateOpen(false);
@@ -108,6 +114,7 @@ export default function UserAdmin() {
     if (!editUser) return;
     setEditBusy(true);
     setError(null);
+
     try {
       const body = {
         username: editUsername,
@@ -288,27 +295,29 @@ export default function UserAdmin() {
                     <span style={{ fontWeight: 700 }}>Permiso para Admin</span>
                   </label>
 
+                  {/* ✅ Ahora SIEMPRE se muestra el input */}
+                  <label className="label">
+                    Contraseña{" "}
+                    <span className="muted" style={{ fontWeight: 700 }}>
+                  (opcional)
+                </span>
+                    <input
+                        className="input"
+                        type="password"
+                        value={createPassword}
+                        onChange={(e) => setCreatePassword(e.target.value)}
+                        placeholder={createGenerate ? "Dejar vacío = generar automática" : "••••••••"}
+                    />
+                  </label>
+
                   <label className="row" style={{ gap: 10, alignItems: "center" }}>
                     <input
                         type="checkbox"
                         checked={createGenerate}
                         onChange={(e) => setCreateGenerate(e.target.checked)}
                     />
-                    <span>Generar contraseña automática</span>
+                    <span>Generar contraseña automática si está vacía</span>
                   </label>
-
-                  {!createGenerate ? (
-                      <label className="label">
-                        Contraseña
-                        <input
-                            className="input"
-                            type="password"
-                            value={createPassword}
-                            onChange={(e) => setCreatePassword(e.target.value)}
-                            placeholder="••••••••"
-                        />
-                      </label>
-                  ) : null}
                 </div>
 
                 <div className="modalFooter">
@@ -386,7 +395,7 @@ export default function UserAdmin() {
             </div>
         ) : null}
 
-        {/* Edit modal */}
+        {/* Edit modal (sin cambios aquí) */}
         {editOpen && editUser ? (
             <div className="modalOverlay" onMouseDown={() => !editBusy && setEditOpen(false)}>
               <div className="modal" onMouseDown={(e) => e.stopPropagation()}>
@@ -482,8 +491,6 @@ export default function UserAdmin() {
                   border-radius: 18px;
                   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
                   overflow: hidden;
-
-                  /* ✅ ESTO era lo que faltaba */
                   color: rgba(255, 255, 255, 0.92);
                 }
 

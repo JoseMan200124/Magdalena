@@ -12,130 +12,108 @@ function safeNext(next) {
   return ALLOWED_NEXT.has(n) ? n : "/report";
 }
 
+function cx(...cls) {
+  return cls.filter(Boolean).join(" ");
+}
+
 function LoginScaffold({ children, active }) {
   return (
-    <>
-      <header className="loginTop">
-        <div className="loginTopInner">
-          <div className="loginTopSpacer" />
+      <>
+        {/* ✅ Mismo navbar/estilo que el portal */}
+        <header className="brandHeader">
+          <div className="container">
+            <div className="brandRow">
+              <div className="brandLeft">
+                <img
+                    src="/magdalena-logo.png"
+                    alt="Magdalena"
+                    style={{ height: 26, width: "auto" }}
+                />
+                <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
+                  <strong style={{ fontSize: 14, letterSpacing: 0.2 }}>Portal</strong>
+                  <span style={{ fontSize: 12, opacity: 0.85 }}>Acceso</span>
+                </div>
+              </div>
 
-          <nav className="loginTopNav">
-            <Link
-              href="/login?next=/report"
-              className={`tab ${active === "report" ? "tabActive" : ""}`}
-            >
-              Portal
-            </Link>
-            <Link
-              href="/login?next=/admin"
-              className={`tab ${active === "admin" ? "tabActive" : ""}`}
-            >
-              Admin
-            </Link>
-          </nav>
-        </div>
-      </header>
+              <nav className="nav">
+                <Link
+                    className={cx(active === "report" && "active")}
+                    href="/login?next=/report"
+                >
+                  Portal
+                </Link>
+                <Link
+                    className={cx(active === "admin" && "active")}
+                    href="/login?next=/admin"
+                >
+                  Admin
+                </Link>
+              </nav>
+            </div>
+          </div>
+        </header>
 
-      <main className="loginShell">
-        {children}
-      </main>
-
-      <style jsx>{`
-        .loginTop {
-          height: 44px;
-          background: var(--brand);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .loginTopInner {
-          height: 44px;
-          max-width: 1100px;
-          margin: 0 auto;
-          padding: 0 16px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-        .loginTopSpacer {
-          width: 1px;
-          height: 1px;
-        }
-        .loginTopNav {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-          justify-content: flex-end;
-        }
-        .tab {
-          font-size: 13px;
-          padding: 8px 12px;
-          border-radius: 999px;
-          border: 1px solid rgba(255, 255, 255, 0.18);
-          color: rgba(255, 255, 255, 0.9);
-          background: rgba(255, 255, 255, 0.06);
-          text-decoration: none;
-          transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
-        }
-        .tab:hover {
-          transform: translateY(-1px);
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(255, 255, 255, 0.28);
-        }
-        .tabActive {
-          background: rgba(255, 255, 255, 0.18);
-          border-color: rgba(255, 255, 255, 0.38);
-          color: #fff;
-        }
-      `}</style>
-    </>
+        <main className="loginShell">{children}</main>
+      </>
   );
 }
 
-function LoginCard({ title, subtitle, onSubmit, username, setUsername, password, setPassword, loading, error }) {
+function LoginCard({
+                     title,
+                     subtitle,
+                     onSubmit,
+                     username,
+                     setUsername,
+                     password,
+                     setPassword,
+                     loading,
+                     error,
+                   }) {
   return (
-    <section className="card loginCard">
-      <div className="cardBody">
-        <div className="logoWrap">
-          <img src="/magdalena-logo.png" alt="Magdalena" className="logoImg" />
+      <section className="card loginCard">
+        <div className="cardBody">
+          <div className="logoWrap">
+            <img src="/magdalena-logo.png" alt="Magdalena" className="logoImg" />
+          </div>
+
+          <h1 className="h1 titleCenter">{title}</h1>
+          <p className="p subtitleCenter">{subtitle}</p>
+
+          <form className="form" onSubmit={onSubmit}>
+            <label className="label">
+              Usuario
+              <input
+                  className="input"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="correo@dominio.com"
+                  autoComplete="username"
+                  required
+              />
+            </label>
+
+            <label className="label">
+              Contraseña
+              <input
+                  className="input"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  required
+              />
+            </label>
+
+            {error ? <div className="error">{String(error)}</div> : null}
+
+            <button className="btnPrimary btnMag" disabled={loading}>
+              {loading ? "Ingresando..." : "Ingresar"}
+            </button>
+          </form>
         </div>
 
-        <h1 className="h1 titleCenter">{title}</h1>
-        <p className="p subtitleCenter">{subtitle}</p>
-
-        <form className="form" onSubmit={onSubmit}>
-          <label className="label">
-            Usuario
-            <input
-              className="input"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="correo@dominio.com"
-              autoComplete="username"
-              required
-            />
-          </label>
-
-          <label className="label">
-            Contraseña
-            <input
-              className="input"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              autoComplete="current-password"
-              required
-            />
-          </label>
-
-          {error ? <div className="error">{String(error)}</div> : null}
-
-          <button className="btnPrimary btnMag" disabled={loading}>
-            {loading ? "Ingresando..." : "Ingresar"}
-          </button>
-        </form>
-      </div>
-
-      <style jsx>{`
+        <style jsx>{`
         .logoWrap {
           display: flex;
           justify-content: center;
@@ -187,7 +165,7 @@ function LoginCard({ title, subtitle, onSubmit, username, setUsername, password,
           filter: none;
         }
       `}</style>
-    </section>
+      </section>
   );
 }
 
@@ -220,51 +198,51 @@ function LoginInner() {
 
   const title = mode === "admin" ? "Ingreso al administrador" : "Ingreso al portal";
   const subtitle =
-    mode === "admin"
-      ? "Ingresa con tu usuario y contraseña para administrar usuarios."
-      : "Ingresa con tu usuario y contraseña para ver el reporte.";
+      mode === "admin"
+          ? "Ingresa con tu usuario y contraseña para administrar usuarios."
+          : "Ingresa con tu usuario y contraseña para ver el reporte.";
 
   return (
-    <LoginScaffold active={mode}>
-      <LoginCard
-        title={title}
-        subtitle={subtitle}
-        onSubmit={onSubmit}
-        username={username}
-        setUsername={setUsername}
-        password={password}
-        setPassword={setPassword}
-        loading={loading}
-        error={error}
-      />
-    </LoginScaffold>
+      <LoginScaffold active={mode}>
+        <LoginCard
+            title={title}
+            subtitle={subtitle}
+            onSubmit={onSubmit}
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+            loading={loading}
+            error={error}
+        />
+      </LoginScaffold>
   );
 }
 
 export default function LoginPage() {
   // ✅ Fix de Vercel/Next: useSearchParams debe estar dentro de Suspense
   return (
-    <Suspense
-      fallback={
-        <LoginScaffold active="report">
-          <section className="card loginCard">
-            <div className="cardBody">
-              <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
-                <img
-                  src="/magdalena-logo.png"
-                  alt="Magdalena"
-                  style={{ height: 84, width: "auto", objectFit: "contain" }}
-                />
-              </div>
-              <h1 className="h1" style={{ textAlign: "center" }}>
-                Cargando…
-              </h1>
-            </div>
-          </section>
-        </LoginScaffold>
-      }
-    >
-      <LoginInner />
-    </Suspense>
+      <Suspense
+          fallback={
+            <LoginScaffold active="report">
+              <section className="card loginCard">
+                <div className="cardBody">
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
+                    <img
+                        src="/magdalena-logo.png"
+                        alt="Magdalena"
+                        style={{ height: 84, width: "auto", objectFit: "contain" }}
+                    />
+                  </div>
+                  <h1 className="h1" style={{ textAlign: "center" }}>
+                    Cargando…
+                  </h1>
+                </div>
+              </section>
+            </LoginScaffold>
+          }
+      >
+        <LoginInner />
+      </Suspense>
   );
 }
