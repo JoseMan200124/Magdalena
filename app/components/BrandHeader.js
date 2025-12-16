@@ -12,7 +12,7 @@ function cx(...cls) {
 export default function BrandHeader() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
 
   return (
     <header className="brandHeader">
@@ -36,6 +36,11 @@ export default function BrandHeader() {
             <Link className={cx(pathname === "/report" && "active")} href="/report">
               Reporte
             </Link>
+            {isAdmin ? (
+              <Link className={cx(pathname === "/admin" && "active")} href="/admin">
+                Admin
+              </Link>
+            ) : null}
             {user && (
               <button
                 onClick={() => {

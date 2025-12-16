@@ -5,8 +5,9 @@ import { apiFetch } from "./api";
 
 const AuthContext = createContext(null);
 
-// PoC: solo un admin fijo (mismo que en el backend).
-const SINGLE_ADMIN_USERNAME = "jmcastellanos@conversionaventa.com";
+function userIsAdmin(u) {
+  return String(u?.role || "").trim().toLowerCase() === "admin";
+}
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
@@ -66,9 +67,7 @@ export function AuthProvider({ children }) {
     setError,
     login,
     logout,
-    isAdmin:
-      String(user?.role || "").toLowerCase() === "admin" &&
-      String(user?.username || "").trim().toLowerCase() === SINGLE_ADMIN_USERNAME.toLowerCase(),
+    isAdmin: userIsAdmin(user),
   }), [token, user, booting, error]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
