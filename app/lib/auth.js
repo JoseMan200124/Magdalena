@@ -12,22 +12,32 @@ function userIsAdmin(u) {
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
+
+  // booting = “todavía estoy resolviendo sesión + /me”
   const [booting, setBooting] = useState(true);
   const [error, setError] = useState(null);
 
+  // 1) leer token del storage
   useEffect(() => {
     const t = window.localStorage.getItem("mag_token");
-    if (t) setToken(t);
-    setBooting(false);
+    setToken(t || null);
   }, []);
 
+  // 2) cargar /me (y solo al final poner booting=false)
   useEffect(() => {
     let cancelled = false;
+
     async function loadMe() {
       if (!token) {
-        setUser(null);
+        if (!cancelled) {
+          setUser(null);
+          setBooting(false);
+        }
         return;
       }
+
+      if (!cancelled) setBooting(true);
+
       try {
         const data = await apiFetch("/api/me", { token });
         if (!cancelled) setUser(data.user);
@@ -38,10 +48,15 @@ export function AuthProvider({ children }) {
           setToken(null);
           window.localStorage.removeItem("mag_token");
         }
+      } finally {
+        if (!cancelled) setBooting(false);
       }
     }
+
     loadMe();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [token]);
 
   async function login(username, password) {
@@ -50,9 +65,11 @@ export function AuthProvider({ children }) {
       method: "POST",
       body: { username, password },
     });
+
     window.localStorage.setItem("mag_token", data.token);
     setToken(data.token);
     setUser(data.user);
+    setBooting(false);
     return data.user;
   }
 
@@ -62,13 +79,19 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  const value = useMemo(() => ({
-    token, user, booting, error,
-    setError,
-    login,
-    logout,
-    isAdmin: userIsAdmin(user),
-  }), [token, user, booting, error]);
+  const value = useMemo(
+      () => ({
+        token,
+        user,
+        booting,
+        error,
+        setError,
+        login,
+        logout,
+        isAdmin: userIsAdmin(user),
+      }),
+      [token, user, booting, error]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

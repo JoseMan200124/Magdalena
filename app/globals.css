@@ -10,6 +10,11 @@
   --mag-border: rgba(15, 23, 42, 0.12);
   --radius: 18px;
   --shadow: 0 10px 30px rgba(2,6,23,.12);
+
+  /* ✅ Variables que tu UI YA usa */
+  --brand: var(--mag-purple);
+  --mag-accent: var(--mag-green);
+  --mag-accent-2: var(--mag-green-2);
 }
 
 *{ box-sizing:border-box; }
@@ -88,57 +93,19 @@ a{ color: inherit; text-decoration: none; }
   padding: 26px 0 40px;
 }
 
-/* Login centrado */
-.loginShell{
-  min-height: calc(100vh - 56px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding: 26px 20px 40px;
-}
-
-.loginCard{
-  width: min(560px, 100%);
-}
-
-.card{
-  background: var(--mag-card);
-  border: 1px solid var(--mag-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-.cardBody{
-  padding: 22px;
-}
-
-/* Card oscuro (para modales/diálogos) */
-.cardDark{
-  background: rgba(2,6,23,.92);
-  border: 1px solid rgba(255,255,255,.12);
-  color: rgba(255,255,255,.92);
-}
-
-.cardDark .p{ color: rgba(226,232,240,.78); }
-.cardDark .h1,
-.cardDark .h2,
-.cardDark .h3{ color: rgba(255,255,255,.96); }
-.cardDark .label{ color: rgba(226,232,240,.90); }
-.cardDark .hint{ color: rgba(226,232,240,.70); }
-.cardDark .input{
-  background: rgba(255,255,255,.08);
-  border-color: rgba(255,255,255,.14);
-  color: rgba(255,255,255,.92);
-}
-.cardDark .input::placeholder{ color: rgba(226,232,240,.55); }
-.cardDark .th{ color: rgba(226,232,240,.78); background: rgba(255,255,255,.08); border-bottom-color: rgba(255,255,255,.10); }
-.cardDark .tr:hover td{ background: rgba(255,255,255,.04); }
+/* Utilidades que tu componente usa */
+.stack{ display:flex; flex-direction:column; gap: 14px; }
+.row{ display:flex; align-items:center; gap: 10px; }
+.between{ justify-content: space-between; }
 
 .h1{
   font-size: clamp(26px, 3vw, 34px);
   line-height: 1.1;
   margin: 0 0 10px;
 }
+.h2{ font-size: 20px; margin: 0 0 6px; font-weight: 900; }
+.h3{ font-size: 16px; font-weight: 900; }
+
 .p{
   margin: 0;
   color: var(--mag-muted);
@@ -200,24 +167,6 @@ a{ color: inherit; text-decoration: none; }
 
 .btnPrimary:hover{ filter: brightness(0.98); }
 
-.btnGhost{
-  background: transparent;
-  border-color: var(--mag-border);
-}
-
-.btnDanger{
-  background: linear-gradient(135deg, #ff5a5a 0%, #ef4444 100%);
-  color: #fff;
-  border-color: rgba(255,255,255,.12);
-  box-shadow: 0 10px 18px rgba(2,6,23,.10);
-}
-
-.btn:focus{ outline: none; }
-.btn:focus-visible{
-  outline: 3px solid rgba(25,229,122,.38);
-  outline-offset: 2px;
-}
-
 .badge{
   display:inline-flex;
   padding: 4px 10px;
@@ -260,37 +209,36 @@ a{ color: inherit; text-decoration: none; }
 
 .muted{ color: var(--mag-muted); }
 
-.alert{
-  border: 1px solid rgba(239,68,68,.3);
+.error{
+  border: 1px solid rgba(239,68,68,.35);
   background: rgba(239,68,68,.08);
   padding: 10px 12px;
   border-radius: 12px;
   color: #7f1d1d;
-  font-weight: 700;
-}
-
-.notice{
-  border: 1px solid rgba(20,229,115,.35);
-  background: rgba(20,229,115,.14);
-  padding: 10px 12px;
-  border-radius: 12px;
-  color: #064e2f;
   font-weight: 800;
 }
 
-.modalBackdrop{
-  position: fixed;
-  inset: 0;
-  background: rgba(2,6,23,.55);
+.loginShell{
+  min-height: calc(100vh - 56px);
   display:flex;
   align-items:center;
   justify-content:center;
-  padding: 20px;
-  z-index: 1000;
+  padding: 26px 20px 40px;
 }
 
-.modal{
+.loginCard{
   width: min(560px, 100%);
+}
+
+.card{
+  background: var(--mag-card);
+  border: 1px solid var(--mag-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.cardBody{
+  padding: 22px;
 }
 
 .iframeWrap{

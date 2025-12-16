@@ -8,37 +8,37 @@ import UserAdmin from "../components/UserAdmin";
 import { useAuth } from "../lib/auth";
 
 export default function AdminPage() {
-  const router = useRouter();
-  const { user, booting, isAdmin } = useAuth();
+    const router = useRouter();
+    const { user, booting, isAdmin } = useAuth();
 
-  useEffect(() => {
-    if (!booting && !user) router.replace("/login?next=/admin");
-    if (!booting && user && !isAdmin) router.replace("/report");
-  }, [booting, user, isAdmin, router]);
+    useEffect(() => {
+        if (!booting && !user) router.replace("/login?next=/admin");
+        if (!booting && user && !isAdmin) router.replace("/report");
+    }, [booting, user, isAdmin, router]);
 
-  if (booting) {
+    if (booting) {
+        return (
+            <>
+                <BrandHeader />
+                <main className="container page">
+                    <div className="card"><Spinner /></div>
+                </main>
+            </>
+        );
+    }
+
+    if (!user || !isAdmin) return null;
+
     return (
-      <>
-        <div className="topbar" />
-        <main className="container page">
-          <div className="card"><Spinner /></div>
-        </main>
-      </>
+        <>
+            <BrandHeader />
+            <main className="container page">
+                <h1 className="h1">Admin de usuarios</h1>
+                <p className="p" style={{ marginBottom: 14 }}>
+                    Añadir, actualizar y eliminar usuarios que pueden ingresar al portal.
+                </p>
+                <UserAdmin />
+            </main>
+        </>
     );
-  }
-
-  if (!user || !isAdmin) return null;
-
-  return (
-    <>
-      <BrandHeader />
-      <main className="container page">
-        <h1 className="h1">Admin de usuarios</h1>
-        <p className="p" style={{ marginBottom: 14 }}>
-          Añadir, actualizar y eliminar usuarios que pueden ingresar al portal.
-        </p>
-        <UserAdmin />
-      </main>
-    </>
-  );
 }
