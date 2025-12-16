@@ -156,7 +156,7 @@ export default function UserAdmin() {
             Admins: <b>{adminCount}</b> • Usuarios: <b>{items.length}</b>
           </p>
         </div>
-        <button className="btnPrimary" onClick={openCreate}>
+        <button className="btn btnPrimary" onClick={openCreate}>
           + Crear usuario
         </button>
       </div>
@@ -315,7 +315,7 @@ export default function UserAdmin() {
                 Cancelar
               </button>
               <button
-                className="btnPrimary"
+                className="btn btnPrimary"
                 onClick={createUser}
                 disabled={createBusy || !createUsername.trim() || (!createGenerate && !createPassword.trim())}
               >
@@ -343,6 +343,34 @@ export default function UserAdmin() {
               border-radius: 18px;
               box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
               overflow: hidden;
+              color: rgba(255, 255, 255, 0.92);
+            }
+
+            /* Asegura buen contraste dentro del modal (texto + formularios) */
+            .modal .h2 {
+              color: rgba(255, 255, 255, 0.96);
+            }
+            .modal .p {
+              color: rgba(226, 232, 240, 0.78);
+            }
+            .modal .label {
+              color: rgba(226, 232, 240, 0.88);
+            }
+            .modal .input {
+              background: rgba(255, 255, 255, 0.08);
+              border-color: rgba(255, 255, 255, 0.14);
+              color: rgba(255, 255, 255, 0.92);
+            }
+            .modal .input::placeholder {
+              color: rgba(226, 232, 240, 0.55);
+            }
+            .modal .btn {
+              background: rgba(255, 255, 255, 0.08);
+              border-color: rgba(255, 255, 255, 0.12);
+              color: rgba(255, 255, 255, 0.92);
+            }
+            .modal .btn:hover {
+              background: rgba(255, 255, 255, 0.12);
             }
             .modalHeader {
               display: flex;
@@ -439,7 +467,7 @@ export default function UserAdmin() {
                 Cancelar
               </button>
               <button
-                className="btnPrimary"
+                className="btn btnPrimary"
                 onClick={saveUser}
                 disabled={editBusy || !editUsername.trim()}
               >
@@ -467,6 +495,39 @@ export default function UserAdmin() {
               border-radius: 18px;
               box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
               overflow: hidden;
+            }
+
+            /* ✅ Asegura contraste en el modal (texto claro sobre fondo oscuro) */
+            .modal .h2 {
+              margin: 0;
+              color: rgba(255, 255, 255, 0.96);
+            }
+            .modal .p {
+              margin: 6px 0 0;
+              color: rgba(226, 232, 240, 0.78);
+              line-height: 1.35;
+            }
+            .modal .label {
+              color: rgba(226, 232, 240, 0.88);
+            }
+            .modal .hint {
+              color: rgba(226, 232, 240, 0.62);
+            }
+            .modal .input {
+              background: rgba(255, 255, 255, 0.08);
+              border-color: rgba(255, 255, 255, 0.14);
+              color: rgba(255, 255, 255, 0.92);
+            }
+            .modal .input::placeholder {
+              color: rgba(226, 232, 240, 0.55);
+            }
+            .modal .btn:not(.btnPrimary):not(.btnDanger) {
+              background: rgba(255, 255, 255, 0.06);
+              border-color: rgba(255, 255, 255, 0.12);
+              color: rgba(255, 255, 255, 0.9);
+            }
+            .modal .btn:not(.btnPrimary):not(.btnDanger):hover {
+              background: rgba(255, 255, 255, 0.1);
             }
             .modalHeader {
               display: flex;
