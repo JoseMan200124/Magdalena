@@ -220,7 +220,6 @@ function LoginInner() {
 }
 
 export default function LoginPage() {
-  // ✅ Fix de Vercel/Next: useSearchParams debe estar dentro de Suspense
   return (
       <Suspense
           fallback={
